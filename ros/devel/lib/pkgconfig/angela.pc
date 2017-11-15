@@ -1,0 +1,8 @@
+prefix=/home/pi/tanis/CodeBase/ros/devel
+
+Name: angela
+Description: Description of angela
+Version: 0.0.1
+Cflags: -I/home/pi/tanis/CodeBase/ros/devel/include
+Libs: -L/home/pi/tanis/CodeBase/ros/devel/lib 
+Requires: roscpp rospy std_msgs message_generation
