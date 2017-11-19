@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import steer
+import newSteer
 import sys
 import time
 import RPi.GPIO as GPIO
@@ -20,7 +20,7 @@ class Test(object):
 
     def main(self):
         print("begin steering")
-        steering = steer.Steer()
+        steering = newSteer.Steer()
 
         steering.turn(self.angle)
 

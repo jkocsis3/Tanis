@@ -15,7 +15,7 @@ import sys
 import time
 import RPi.GPIO as GPIO
 import rospy
-from angela.msg import steermsg
+# from angela.msg import steermsg
 
 
 class Steer(object):
@@ -24,24 +24,24 @@ class Steer(object):
     _DEBUG_INFO = 'DEBUG "steer.py":'
 
     def __init__(self, debug=True):  
-        if self._DEBUG:
-            rospy.loginfo("Launching steer script")       
+        # if self._DEBUG:
+        #     rospy.loginfo("Launching steer script")       
         
         self._DEBUG = debug
         
         # Set our limits. there are about 30 degrees of movement on each side of center.
         self._maxangle = {"left":60, "straight":90, "right":120}
-        if self._DEBUG:
-            rospy.loginfo(self._DEBUG_INFO + 'left angle: %s, straight angle: %s, right angle: %s' % (self._maxangle["left"], self._maxangle["straight"], self._maxangle["right"]))
+        # if self._DEBUG:
+        #     rospy.loginfo(self._DEBUG_INFO + 'left angle: %s, straight angle: %s, right angle: %s' % (self._maxangle["left"], self._maxangle["straight"], self._maxangle["right"]))
 
         # implement ROS subscribers
-        rospy.init_node('SteeringNode')
-        self.speed_sub = rospy.Subscriber('/angela/steer/setAngle', steermsg, self.turn)
-        # stops the node from exiting
-        rospy.spin()
+        # rospy.init_node('SteeringNode')
+        # self.speed_sub = rospy.Subscriber('/angela/steer/setAngle', steermsg, self.turn)
+        # # stops the node from exiting
+        # rospy.spin()
    
 
-    def turn(self, data):
+    def turn(self, angle):
         ''' Turn the front wheels to the given angle '''
         # set the mode to broadcom (Use GPO numbers not pin numbers)      
         # http://www.instructables.com/id/Servo-Motor-Control-With-Raspberry-Pi/
@@ -53,9 +53,10 @@ class Steer(object):
         servo = GPIO.PWM(gpioNum, 60)
         # start the servo with a 0 duty cycle
         servo.start(0)  
-        anglein = data.angle      
-        if self._DEBUG:
-            rospy.loginfo("Turn to: " + str(anglein))
+        anglein = angle      
+        # if self._DEBUG:
+        #     rospy.loginfo("Turn to: " + str(anglein))
+        print("Turn to: " + str(anglein))
         
         if anglein < self._maxangle["left"]:
             anglein = self._maxangle["left"]
@@ -78,8 +79,8 @@ class Steer(object):
         
 
         GPIO.cleanup()
-        if self._DEBUG:
-            rospy.loginfo("script complete")
+        # if self._DEBUG:
+        #     rospy.loginfo("script complete")
 
   
 

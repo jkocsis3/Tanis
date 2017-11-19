@@ -2,6 +2,7 @@
 <launch>
     <node pkg="angela" name="motor_node" type="motormove.py"/>
     <node pkg="angela" name="steering_node" type="steer.py"/>
+    <node pkg="angela" name="JoyStick" type="joystick.py"/>
     <!-- <node pkg="angela" name="testing_node" type="TanisTest.py"/> -->
 </launch>
 
