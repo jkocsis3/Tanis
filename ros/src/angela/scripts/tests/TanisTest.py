@@ -30,42 +30,45 @@ class TanisTest(object):
             rospy.loginfo("Started the Test Node")
 
         self.rate = rospy.Rate(10)
-        self.targetSpeed = 0
+        self.targetSpeed = 100
         self.steerAngle = 90
         self.direction = 'right'
 
         # while ROS is running
         while not rospy.is_shutdown():
-            #self.TestSpeed()
+            # self.TestSpeed()
             self.TestSteer()
 
     def TestSpeed(self):
         if self._verbose:
             rospy.loginfo("Current Speed = " + str(self.targetSpeed))
         self.pub_speed.publish(self.targetSpeed, 1)
-        if( self.targetSpeed >= 100):
-            self.targetSpeed = 0
-        else:
-            self.targetSpeed = self.targetSpeed + 10
-        self.rate.sleep()
+        time.sleep(5)
+        print("stopping motors")
+        targetSpeed = 0
+        self.pub_speed.publish(self.targetSpeed, 1)
 
     def TestSteer(self):
         if self._verbose:
             rospy.loginfo("Current Steering Angle = " + str(self.steerAngle) + " Direction of Turn = " + str(self.direction))
         self.pub_steer.publish(self.steerAngle)
-        if self.direction == 'left' and self.steerAngle < 60:
-            self.direction = 'right'
-        elif self.direction == 'right' and self.steerAngle > 120:
-            self.direction == 'left'
+        time.sleep(5)
 
-        # This tells it wether to add or delete 
-        if self.direction == 'left':
-            self.steerAngle = self.steerAngle - 10
-        if self.direction == 'right':
-            self.steerAngle == self.steerAngle + 10
-        if self.direction == 'center':
-            self.steerAngle = 90
-        self.rate.sleep()
+        self.steerAngle = 60
+        if self._verbose:
+            rospy.loginfo("Current Steering Angle = " + str(self.steerAngle) + " Direction of Turn = " + str(self.direction))
+        self.pub_steer.publish(self.steerAngle)
+        time.sleep(5)
+        self.steerAngle = 120
+        if self._verbose:
+            rospy.loginfo("Current Steering Angle = " + str(self.steerAngle) + " Direction of Turn = " + str(self.direction))
+        self.pub_steer.publish(self.steerAngle)
+        time.sleep(5)
+        self.steerAngle = 90
+        if self._verbose:
+            rospy.loginfo("Current Steering Angle = " + str(self.steerAngle) + " Direction of Turn = " + str(self.direction))
+        self.pub_steer.publish(self.steerAngle)
+        
 
 
 

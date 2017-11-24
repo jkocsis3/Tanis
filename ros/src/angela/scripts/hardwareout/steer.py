@@ -24,10 +24,10 @@ class Steer(object):
     _DEBUG_INFO = 'DEBUG "steer.py":'
 
     def __init__(self, debug=True):  
+        self._DEBUG = debug
+        
         if self._DEBUG:
             rospy.loginfo("Launching steer script")       
-        
-        self._DEBUG = debug
         
         # Set our limits. there are about 30 degrees of movement on each side of center.
         self._maxangle = {"left":60, "straight":90, "right":120}
@@ -69,15 +69,15 @@ class Steer(object):
         servo.ChangeDutyCycle(angle)
         # allow the servo to complete movement.
         time.sleep(1)
-        servo.stop()
+        # servo.stop()
         # change back to 0 so we are not sending inputs
         # servo.ChangeDutyCycle(0)
 
         # turn the pin off
-        GPIO.output(gpioNum, False)
+        # GPIO.output(gpioNum, False)
         
 
-        GPIO.cleanup()
+        # GPIO.cleanup()
         if self._DEBUG:
             rospy.loginfo("script complete")
 

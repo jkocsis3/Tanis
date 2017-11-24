@@ -28,12 +28,21 @@ class MotorMove():
         # make the motor objects and assign the frequency.
         self.a = GPIO.PWM(27, 60)
         self.b = GPIO.PWM(22, 60)
+        self.a.start(0)
+        self.b.start(0)
+        def a_speed(value):
+            a.ChangeDutyCycle(value)
+        def b_speed(value):
+            b.ChangeDutyCycle(value)
+
 
         self.motorA = TB6612.Motor(6)
         self.motorB = TB6612.Motor(13)
 
         self.motorA.debug = True
         self.motorB.debug = True
+        self.motorA.pwm = a_speed
+        self.motorB.pwm = b_speed
 
         self.delay = 0.05
         # start the motor with a duty cycle of 0, basically it is off.  
