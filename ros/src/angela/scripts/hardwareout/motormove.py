@@ -31,9 +31,9 @@ class MotorMove():
         self.a.start(0)
         self.b.start(0)
         def a_speed(value):
-            a.ChangeDutyCycle(value)
+            self.a.ChangeDutyCycle(value)
         def b_speed(value):
-            b.ChangeDutyCycle(value)
+            self.b.ChangeDutyCycle(value)
 
 
         self.motorA = TB6612.Motor(6)
@@ -78,7 +78,7 @@ class MotorMove():
         elif data.direction == -1:
             self.moveBackward(rate=data.rate)
         else:
-           self.stop()
+            self.stop()
 
     def startMotor(self, rate):
         self.a.start(0)
@@ -98,4 +98,4 @@ class MotorMove():
         self.motorA.stop()
         self.motorB.stop()
 if __name__ == '__main__':
-  MotorMove()
+    MotorMove()

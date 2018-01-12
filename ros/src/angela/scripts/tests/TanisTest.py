@@ -45,7 +45,7 @@ class TanisTest(object):
         self.pub_speed.publish(self.targetSpeed, 1)
         time.sleep(5)
         print("stopping motors")
-        targetSpeed = 0
+        self.targetSpeed = 0
         self.pub_speed.publish(self.targetSpeed, 1)
 
     def TestSteer(self):
@@ -78,6 +78,3 @@ if __name__ == '__main__':
         TanisTest()
     except rospy.ROSInterruptException:
         pass
-
-
-

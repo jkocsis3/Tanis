@@ -38,12 +38,12 @@ class Steer(object):
 
         # implement ROS subscribers
         rospy.init_node('SteeringNode')
-        self.speed_sub = rospy.Subscriber('/angela/steer/setAngle', steermsg, self.turn)
+        self.speed_sub = rospy.Subscriber('/angela/steer/setAngle', steermsg, self.steer)
         # stops the node from exiting
         rospy.spin()
    
 
-    def turn(self, data):
+    def steer(self, data):
         ''' Turn the front wheels to the given angle '''
         # set the mode to broadcom (Use GPO numbers not pin numbers)  
         pwm = PCA9685.PCA9685()

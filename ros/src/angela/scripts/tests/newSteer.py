@@ -11,83 +11,45 @@
 * Website     : www.github.com/jkocsis3/tanis
 **********************************************************************
 '''
-import sys
+
+from PWM_Control import PCA9685
+from smbus import SMBus
 import time
-import RPi.GPIO as GPIO
-import rospy
-# from angela.msg import steermsg
 
 
-class Steer(object):
-
-    _DEBUG = True
-    _DEBUG_INFO = 'DEBUG "steer.py":'
+class Steer(object):    
 
     def __init__(self, debug=True):  
-        # if self._DEBUG:
-        #     rospy.loginfo("Launching steer script")       
-        
-        self._DEBUG = debug
-        
         # Set our limits. there are about 30 degrees of movement on each side of center.
-        self._maxangle = {"left":60, "straight":90, "right":120}
-        # if self._DEBUG:
-        #     rospy.loginfo(self._DEBUG_INFO + 'left angle: %s, straight angle: %s, right angle: %s' % (self._maxangle["left"], self._maxangle["straight"], self._maxangle["right"]))
-
-        # implement ROS subscribers
-        # rospy.init_node('SteeringNode')
-        # self.speed_sub = rospy.Subscriber('/angela/steer/setAngle', steermsg, self.turn)
-        # # stops the node from exiting
-        # rospy.spin()
+        self._maxangle = {"left": 60, "straight": 90, "right": 120}
    
 
-    def turn(self, angle):
-        ''' Turn the front wheels to the given angle '''
-        # set the mode to broadcom (Use GPO numbers not pin numbers)      
-        # http://www.instructables.com/id/Servo-Motor-Control-With-Raspberry-Pi/
-        gpioNum = 26
-        GPIO.setmode(GPIO.BCM)
-        # set GPIO18 as an output
-        GPIO.setup(gpioNum, GPIO.OUT)
-        # make the servo object and assign the frequency.
-        servo = GPIO.PWM(gpioNum, 60)
-        # start the servo with a 0 duty cycle
-        servo.start(0)  
-        anglein = angle      
-        # if self._DEBUG:
-        #     rospy.loginfo("Turn to: " + str(anglein))
-        print("Turn to: " + str(anglein))
-        
-        if anglein < self._maxangle["left"]:
-            anglein = self._maxangle["left"]
-        if anglein > self._maxangle["right"]:
-            anglein = self._maxangle["right"]
+    def turn(self, anglein):
+        print("turning to: " + str(anglein))
+        # http://www.python-exemplary.com/drucken.php?inhalt_mitte=raspi/en/servomotors.inc.php
+        fPWM = 50
+        i2c_address = 0x40  # (standard) adapt to your module
+        channel = 8  # adapt to your wiring
+        a = 5.5  # adapt to your servo
+        b = 2   # adapt to your servo
 
-        angle = self.SetAngle(anglein)
-        # turn the pin on
-        GPIO.output(gpioNum, True)
-        # send the command
-        servo.ChangeDutyCycle(angle)
-        # allow the servo to complete movement.
-        time.sleep(1)
-        servo.stop()
-        # change back to 0 so we are not sending inputs
-        # servo.ChangeDutyCycle(0)
+        bus = SMBus(1)  # Raspberry Pi revision 2
+        pwm = PCA9685.PWM(bus, i2c_address)
+        pwm.setFreq(fPWM)
 
-        # turn the pin off
-        GPIO.output(gpioNum, False)
-        
+        i = 0
+        while i < 180:
+            anglein = i
+            duty = a / 180 * anglein + b
+            pwm.setDuty(channel, duty)
+            print("direction =" + str(anglein) + "-> duty =" + str(duty))
+            # time.sleep(1)  # allow to settle
+            i+=1
+        print("turn complete")
 
-        GPIO.cleanup()
-        # if self._DEBUG:
-        #     rospy.loginfo("script complete")
-
-  
 
     def SetAngle(self, angle):
         return angle / 18 + 2
 
-
 if __name__ == '__main__':
     Steer()
-       

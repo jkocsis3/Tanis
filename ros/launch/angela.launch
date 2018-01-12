@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <launch>
     <node pkg="angela" name="motor_node" type="motormove.py"/>
-    <node pkg="angela" name="steering_node" type="steer.py"/>
-    <node pkg="angela" name="JoyStick" type="joystick.py"/>
+    <node pkg="angela" name="steering_node" type="steer.py" output="screen"/>
+<!--     <node pkg="angela" name="TurnInput" type="turnInput.py" output="screen"/>    
+    <node pkg="angela" name="SpeedInput" type="speedInput.py" output="screen"/> -->
     <!-- <node pkg="angela" name="testing_node" type="TanisTest.py"/> -->
 </launch>
 
