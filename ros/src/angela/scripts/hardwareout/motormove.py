@@ -18,11 +18,13 @@ from angela.msg import motormsg
 _DEBUG = True
 _DEBUG_INFO = 'DEBUG "motormove.py":'
 
+
 class MotorMove():
     def __init__(self):
-        if _DEBUG:
-            rospy.loginfo(_DEBUG_INFO + " initializing node")
+        rospy.init_node('MotorMove')
+        rospy.loginfo(_DEBUG_INFO + " initializing node")            
         GPIO.setmode(GPIO.BCM)
+        GPIO.setwarnings(False)
         # set GPIO22 and GPIO27 (pins 13 and 15)
         GPIO.setup((27, 22), GPIO.OUT)
         # make the motor objects and assign the frequency.
@@ -36,23 +38,33 @@ class MotorMove():
             self.b.ChangeDutyCycle(value)
 
 
-        self.motorA = TB6612.Motor(6)
-        self.motorB = TB6612.Motor(13)
+        self.motorA = TB6612.Motor(17)
+        self.motorB = TB6612.Motor(18)
 
-        self.motorA.debug = True
-        self.motorB.debug = True
+        self.motorA.debug = False
+        self.motorB.debug = False
         self.motorA.pwm = a_speed
         self.motorB.pwm = b_speed
 
         self.delay = 0.05
         # start the motor with a duty cycle of 0, basically it is off.  
-        self.startMotor(0)
+        # self.startMotor(0)
 
         # implement ROS subscribers
-        rospy.init_node('MotorMove')
+        
         self.speed_sub = rospy.Subscriber('/angela/motor/setSpeed', motormsg, self.move)
         # stops the node from exiting
         rospy.spin()
+
+    # Main function to move the motors.
+    # takes a rate(0-100) and a direction 1 (forward), 0(Full stop) or -1(reverse)
+    def move(self, data):
+        if data.direction == "forward":
+            self.moveForward(rate=data.rate)
+        elif data.direction == "reverse":
+            self.moveBackward(rate=data.rate)
+        else:
+            self.stop()
 
     def moveForward(self, rate):
         if _DEBUG:
@@ -69,30 +81,7 @@ class MotorMove():
         self.motorA.speed = rate
         self.motorB.backward()
         self.motorB.speed = rate
-
-    # Main function to move the motors.
-    # takes a rate(0-100) and a direction 1 (forward), 0(Full stop_ or -1(reverse)
-    def move(self, data):
-        if data.direction == 1:
-            self.moveForward(rate=data.rate)
-        elif data.direction == -1:
-            self.moveBackward(rate=data.rate)
-        else:
-            self.stop()
-
-    def startMotor(self, rate):
-        self.a.start(0)
-        self.b.start(0)
-
-        def a_speed(value):
-            self.a.ChangeDutyCycle(value)
-
-        def b_speed(value):
-            self.b.ChangeDutyCycle(value)
-
-        self.motorA.pwm = a_speed
-        self.motorB.pwm = b_speed
-        # self.moveForward(rate)
+   
 
     def stop(self):
         self.motorA.stop()

@@ -10,11 +10,10 @@
 **********************************************************************
 '''
 
-import sys
 import time
-import math
 import rospy
 from angela.msg import motormsg, steermsg
+
 
 class TanisTest(object):
     """docstring for TanisTest"""
@@ -36,7 +35,7 @@ class TanisTest(object):
 
         # while ROS is running
         while not rospy.is_shutdown():
-            # self.TestSpeed()
+            self.TestSpeed()
             self.TestSteer()
 
     def TestSpeed(self):

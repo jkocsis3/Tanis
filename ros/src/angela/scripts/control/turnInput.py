@@ -12,22 +12,23 @@
 
 import rospy
 from evdev import InputDevice, categorize, ecodes
-from angela.msg import motormsg, steermsg
-import time
+from angela.msg import steermsg
+
+
 class TurnInput(object):
     _DEBUG = True
     _DEBUG_INFO = 'DEBUG "turnInput.py":'
 
     def __init__(self, debug=True):
         self.DEBUG = debug
-         # implement ROS subscribers
+        # implement ROS subscribers
         rospy.init_node('TurnInput')
         self.pub_steer = rospy.Publisher('/angela/steer/setAngle', steermsg, queue_size=10)
         self.turningValue = 90  
         self.rate = rospy.Rate(50)
         # time.sleep(10)
         self.controller = InputDevice('/dev/input/event0')
-         # while ROS is running
+        # while ROS is running
         while not rospy.is_shutdown():
             self.ReadInputs()
 
@@ -41,10 +42,9 @@ class TurnInput(object):
                         if self._DEBUG:
                             rospy.loginfo(self._DEBUG_INFO + " turning value = " + str(int(self.turningValue)))
                         self.pub_steer.publish(self.turningValue)
-                #self.rate.sleep()
+                # self.rate.sleep()
             except IOError:
                 pass
             
 if __name__ == '__main__':
     TurnInput()
-       

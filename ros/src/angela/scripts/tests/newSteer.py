@@ -14,7 +14,7 @@
 
 from PWM_Control import PCA9685
 from smbus import SMBus
-import time
+import rospy
 
 
 class Steer(object):    
@@ -29,22 +29,18 @@ class Steer(object):
         # http://www.python-exemplary.com/drucken.php?inhalt_mitte=raspi/en/servomotors.inc.php
         fPWM = 50
         i2c_address = 0x40  # (standard) adapt to your module
-        channel = 8  # adapt to your wiring
-        a = 5.5  # adapt to your servo
-        b = 2   # adapt to your servo
+        channel = 15  # adapt to your wiring
+        # a = 6.5  # adapt to your servo
+        # b = 2   # adapt to your servo
 
         bus = SMBus(1)  # Raspberry Pi revision 2
         pwm = PCA9685.PWM(bus, i2c_address)
         pwm.setFreq(fPWM)
 
-        i = 0
-        while i < 180:
-            anglein = i
-            duty = a / 180 * anglein + b
-            pwm.setDuty(channel, duty)
-            print("direction =" + str(anglein) + "-> duty =" + str(duty))
-            # time.sleep(1)  # allow to settle
-            i+=1
+        # duty = a / 180 * anglein + b
+        duty = self.SetAngle(anglein)
+        pwm.setDuty(channel, duty)
+        print("direction =" + str(anglein) + "-> duty =" + str(duty))
         print("turn complete")
 
 

@@ -10,7 +10,7 @@ class Test(object):
     _frequency = 60
 
     def __init__(self):        
-        self.angle = int(float(sys.argv[1]))
+        self.angle = float(sys.argv[1])
         print("args loaded")
         self.main()
         

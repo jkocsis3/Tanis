@@ -1,2 +1,2 @@
 float32 rate
-float32 direction
+string direction

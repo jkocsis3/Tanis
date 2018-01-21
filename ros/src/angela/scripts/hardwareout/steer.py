@@ -11,9 +11,7 @@
 * Website     : www.github.com/jkocsis3/tanis
 **********************************************************************
 '''
-import sys
-import time
-import RPi.GPIO as GPIO
+from smbus import SMBus
 import rospy
 from angela.msg import steermsg
 from PWM_Control import PCA9685
@@ -45,19 +43,6 @@ class Steer(object):
 
     def turn(self, data):
         ''' Turn the front wheels to the given angle '''
-        # set the mode to broadcom (Use GPO numbers not pin numbers)  
-        pwm = PCA9685.PCA9685()
-        servo_min = 150
-        servo_max = 600
-        # # http://www.instructables.com/id/Servo-Motor-Control-With-Raspberry-Pi/
-        # gpioNum = 26
-        # GPIO.setmode(GPIO.BCM)
-        # # set GPIO18 as an output
-        # GPIO.setup(gpioNum, GPIO.OUT)
-        # # make the servo object and assign the frequency.
-        # servo = GPIO.PWM(gpioNum, 60)
-        # # start the servo with a 0 duty cycle
-        # servo.start(0)  
         anglein = data.angle      
         if self._DEBUG:
             rospy.loginfo("Turn to: " + str(anglein))
@@ -66,35 +51,17 @@ class Steer(object):
             anglein = self._maxangle["left"]
         if anglein > self._maxangle["right"]:
             anglein = self._maxangle["right"]
-
-        angle = self.SetAngle(int(anglein))
-        pwm.set_pwm(8, 0, anglein)
-        # # turn the pin on
-        # GPIO.output(gpioNum, True)
-        # # send the command
-        # servo.ChangeDutyCycle(angle)
-        # allow the servo to complete movement.
-        time.sleep(1)
-        # servo.stop()
-        # change back to 0 so we are not sending inputs
-        # servo.ChangeDutyCycle(0)
-
-        # turn the pin off
-        # GPIO.output(gpioNum, False)
-        
-
-        # GPIO.cleanup()
+        # http://www.python-exemplary.com/drucken.php?inhalt_mitte=raspi/en/servomotors.inc.php
+        fPWM = 50
+        i2c_address = 0x40  # (standard) adapt to your module
+        channel = 15  
+        bus = SMBus(1)  
+        pwm = PCA9685.PWM(bus, i2c_address)
+        pwm.setFreq(fPWM)
+        duty = self.SetAngle(anglein)
+        pwm.setDuty(channel, duty)
         if self._DEBUG:
             rospy.loginfo("script complete")
-
-    def set_servo_pulse(channel, pulse):
-        pulse_length = 1000000
-        pulse_length //= 60
-        pulse_length //= 4096
-        pulse *= 1000
-        pulse //= pulse_length
-        pwm.set_pwm(8,0,pulse)
-      
 
     def SetAngle(self, angle):
         return angle / 18 + 2
@@ -102,4 +69,3 @@ class Steer(object):
 
 if __name__ == '__main__':
     Steer()
-       
