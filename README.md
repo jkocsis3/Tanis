@@ -32,7 +32,7 @@ Once these were built and tested, it was time to get ROS running on the car.  I 
     - Path Planning
 
 ### Why is the car names Tanis, and the ROS package called Angela?
-If you like reading hard Science Fiction, then I highly suggest my all time favorite series: [ Aeon 14 ](http://www.aeon14.com/).  Tanis Richards is the protagonist of the series, and has become one of my all time favorite characters.
+If you like reading hard Science Fiction, then I highly suggest my all time favorite series: [ Aeon 14 ](http://www.aeon14.com/).  Tanis Richards is the protagonist of the series, and has become one of my all time favorite characters. Angela is the name of her partner AI, so I thought it was cool to name the car after Tanis, and the computer doing all the calculations after Angela.
 
 ### Nov 15
 I think I will keep a running commentary here.  Today I was able to get ROS installed and running on my Raspberry Pi. With ROS running, i decided it was time to update the code to use topics and messages.  I created a few message types to test steering and speed and set up the appropriate topics.  After a few hours of tweaking my code, I was able to successfully use ROS to pass messages between a testing node and the motormove node.  The steering node is giving me some TCP/IP issues so I will look in to that tomorrow.  Overall, it was a pretty productive day!!
