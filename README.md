@@ -66,6 +66,6 @@ Now that I am able to control the vehicle with a reasonable degree of accuracy, 
 When I was done installing, somehow the GUI had disappeared.  This wouldnt be a problem except for the fact you need multiple terminal windows to run ROS.  Once I am done reformatting the card and getting everything installed, it will be backed up so I dont have to deal with getting everything installed!
 
 While all that is going on, I began to sketch out the system map.
-![Angela System Overview](AngelaOverview.jpg)
+![Angela System Overview](images/AngelaOverview.jpg)
 
 
