@@ -45,3 +45,27 @@ Did some work on the wiring for the car today.  Built new jumpers for the boards
 
 ![Tanis with controller](images/IMG_8144.JPG)
 ![Cleaned up wiring](images/IMG_8145.JPG)
+
+### Jan 20th - Tanis is driving!
+But not on her own...
+
+Back after an extended break.  I took some time away from the project for a while since I had hit some roadblocks and wanted to take a step back.  I was having all kinds of issues getting the steering smooth.  As I found out, you can use the Raspberry Pi GPIO to send a PWM (Pulse Width Modulation) signal.  Unfortunately that signal is dirty.  Which meant I was not getting clean steerning.  It was real jerky and couldnt seem to catch up.  I ended up using a PCA9685 PWM module to control the signals.  Turned out it was fairly easy to set up and there were even some basic 'drivers' written for the it.  This made it a lot easier as the drivers could handle the calculations required to generate the signal.  I just had to turn my steering degrees into a usable signal.  The Xbox one controller puts out a numeric value, from approx 32000 to -32000,  corresponding to the position of the joystick on the X axis.  I had to turn into a usable value from 0 to 100, After a lot of trial and error i was able to come up with the following:
+'''python
+    self.turningValue = 90 + int(absevent.event.value / 1050) 
+'''
+
+Once this was done, this message is passed along in the steermsg to the turn_input node.  This node then take the value, divides by 18 and adds 2 which turns it into a value from 1-10 which corresponds to the approx 120 degree arc the wheels can turn.
+
+Calibrating Tanis' steering
+![Calibrating Tanis](images/SteeringCal.jpg)
+
+Because of the errors trying to get a smooth turn, I ended up splitting the turning and the speed inputs into two separate scripts.  I found if they were in one script it was unable to read the events fast enough and often times the events would step all over themselves resulting in very erratic behaivor.
+
+Now that I am able to control the vehicle with a reasonable degree of accuracy, it is time to start capturing data in order to build my training and test sets for the behaviorial cloning section. I wanted to use OpenCV to manipulate the images so I began installing it on the Raspberry Pi.
+
+When I was done installing, somehow the GUI had disappeared.  This wouldnt be a problem except for the fact you need multiple terminal windows to run ROS.  Once I am done reformatting the card and getting everything installed, it will be backed up so I dont have to deal with getting everything installed!
+
+While all that is going on, I began to sketch out the system map.
+![Angela System Overview](AngelaOverview.jpg)
+
+
