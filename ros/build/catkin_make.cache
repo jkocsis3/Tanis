@@ -1,2 +1,2 @@
 angela
--DCATKIN_DEVEL_PREFIX=/home/pi/tanis/CodeBase/ros/devel -DCMAKE_INSTALL_PREFIX=/home/pi/tanis/CodeBase/ros/install -G Unix Makefiles
+-DCATKIN_DEVEL_PREFIX=/home/pi/tanis/codebase/ros/devel -DCMAKE_INSTALL_PREFIX=/home/pi/tanis/codebase/ros/install -G Unix Makefiles

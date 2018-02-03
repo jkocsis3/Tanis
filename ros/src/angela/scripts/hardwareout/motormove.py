@@ -20,8 +20,9 @@ _DEBUG_INFO = 'DEBUG "motormove.py":'
 
 
 class MotorMove():
-    def __init__(self):
-        rospy.init_node('MotorMove')
+    def __init__(self, debug=False):
+        self._DEBUG = debug
+        rospy.init_node('Motor_Node')
         rospy.loginfo(_DEBUG_INFO + " initializing node")            
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
@@ -67,7 +68,7 @@ class MotorMove():
             self.stop()
 
     def moveForward(self, rate):
-        if _DEBUG:
+        if self._DEBUG:
             rospy.loginfo(_DEBUG_INFO + " motors moving forward at:" + str(rate))
         self.motorA.forward()
         self.motorA.speed = rate
@@ -75,7 +76,7 @@ class MotorMove():
         self.motorB.speed = rate
 
     def moveBackward(self, rate):
-        if _DEBUG:
+        if self._DEBUG:
             rospy.loginfo(_DEBUG_INFO + " motors moving backward at:" + str(rate))
         self.motorA.backward()
         self.motorA.speed = rate

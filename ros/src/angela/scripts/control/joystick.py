@@ -13,14 +13,15 @@
 import rospy
 from evdev import InputDevice, categorize, ecodes
 from angela.msg import motormsg, steermsg
-import time
+
+
 class JoyStick(object):
     _DEBUG = True
     _DEBUG_INFO = 'DEBUG "JoyStick.py":'
 
     def __init__(self, debug=True):
         self.DEBUG = debug
-         # implement ROS subscribers
+        # implement ROS subscribers
         rospy.init_node('JoyStick')
         self.pub_speed = rospy.Publisher('/angela/motor/setSpeed', motormsg, queue_size=10)
         self.pub_steer = rospy.Publisher('/angela/steer/setAngle', steermsg, queue_size=10)
@@ -29,7 +30,7 @@ class JoyStick(object):
         self.rate = rospy.Rate(50)
         # time.sleep(10)
         self.controller = InputDevice('/dev/input/event0')
-         # while ROS is running
+        # while ROS is running
         while not rospy.is_shutdown():
             self.ReadInputs()
 
@@ -38,26 +39,26 @@ class JoyStick(object):
             try:            
                 if event.type == ecodes.EV_ABS:
                     absevent = categorize(event)
-                    #if self._DEBUG:
-                        #rospy.loginfo(self._DEBUG_INFO + " Event telemetry received")
+                    # if self._DEBUG:
+                    # rospy.loginfo(self._DEBUG_INFO + " Event telemetry received")
                     if ecodes.bytype[absevent.event.type][absevent.event.code] == 'ABS_RZ':
                         self.speed = absevent.event.value / 10.23
-                        if self.speed <0:
+                        if self.speed < 0:
                             self.speed = 0
                         if self.speed > 100:
                             self.speed = 100
-                        #self.pub_speed.publish(abs(int(self.speed)), 1)
-                        rospy.loginfo(self._DEBUG_INFO + " Speed value = " + str(abs(int(self.speed))))
+                        # self.pub_speed.publish(abs(int(self.speed)), 1)
+                        if self._DEBUG:
+                            rospy.loginfo(self._DEBUG_INFO + " Speed value = " + str(abs(int(self.speed))))
 
                     if ecodes.bytype[absevent.event.type][absevent.event.code] == 'ABS_X':                    
                         self.turningValue = 90 + int(absevent.event.value / 1050) 
                         if self._DEBUG:
                             rospy.loginfo(self._DEBUG_INFO + " turning value = " + str(int(self.turningValue)))
-                        #self.pub_steer.publish(self.turningValue)
+                        # self.pub_steer.publish(self.turningValue)
                 self.rate.sleep()
             except IOError:
                 pass
             
 if __name__ == '__main__':
     JoyStick()
-       

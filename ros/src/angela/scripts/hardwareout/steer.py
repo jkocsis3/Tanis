@@ -23,7 +23,7 @@ class Steer(object):
     _DEBUG = True
     _DEBUG_INFO = 'DEBUG "steer.py":'
 
-    def __init__(self, debug=True):  
+    def __init__(self, debug=False):  
         self._DEBUG = debug
         
         if self._DEBUG:
@@ -35,7 +35,7 @@ class Steer(object):
             rospy.loginfo(self._DEBUG_INFO + 'left angle: %s, straight angle: %s, right angle: %s' % (self._maxangle["left"], self._maxangle["straight"], self._maxangle["right"]))
 
         # implement ROS subscribers
-        rospy.init_node('SteeringNode')
+        rospy.init_node('Steering_Node')
         self.speed_sub = rospy.Subscriber('/angela/steer/setAngle', steermsg, self.turn)
         # stops the node from exiting
         rospy.spin()

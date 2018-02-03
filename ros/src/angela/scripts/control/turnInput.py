@@ -19,13 +19,13 @@ class TurnInput(object):
     _DEBUG = True
     _DEBUG_INFO = 'DEBUG "turnInput.py":'
 
-    def __init__(self, debug=True):
-        self.DEBUG = debug
+    def __init__(self, debug=False):
+        self._DEBUG = debug
         # implement ROS subscribers
-        rospy.init_node('TurnInput')
-        self.pub_steer = rospy.Publisher('/angela/steer/setAngle', steermsg, queue_size=10)
+        rospy.init_node('Turn_Node')
+        self.pub_steer = rospy.Publisher('/angela/steer/setAngle', steermsg, queue_size=5)
         self.turningValue = 90  
-        self.rate = rospy.Rate(50)
+        self.rate = rospy.Rate(5)
         # time.sleep(10)
         self.controller = InputDevice('/dev/input/event0')
         # while ROS is running
