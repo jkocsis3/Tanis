@@ -85,4 +85,4 @@ Well, I was able to take Tanis for a drive today.  I spent a few hours cleaning 
 In school we were usually working with datasets containing around 30,000 images.  Capturing that many images would require I drove around the track for about 22 minutes (at 30 fps).  I dont plan on doing that though.  I plan on maybe one trip around the track in each direction. Once I get that set of images, then I will do some image manipulation to rotate some of the images, adjust the brightness, and some other cool tricks where the same image will be used 4-5 times and look different to the neural network each time.  If I have enough of a training set I will start working the neural network.  
 
 I adapted the Behaivorial Cloning neural network for use with Tanis, tomorrow I will see if it actually works :) Unti then, here is Tanis chasing my Boxer, Muzay.
-![Chasing Muzay](images/Chasing.jpg)
+![Chasing Muzay](images/chasing.jpg)
