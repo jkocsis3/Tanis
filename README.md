@@ -77,3 +77,12 @@ Found out my camera on the pi was bad.  Not sure what happened, but I think the 
 With all of that being said, I am getting pretty close to the fun parts of the project.  Since the camera is working, and just needs a minor tweak for the color being off, I can start capturing images on the track which I can feed into my behaivorial cloning module.  I plan on capturing images from a few laps around the track, and then feed them into a behaivorial cloning neural network I made during school.  I'll do all the heavy training of the network on my laptop and save a completed model of the network out, which I can then use on Tanis to run the images through.  
 
 Before I start doing that I need to fix the camera issue and fix an issue with the vehicle pulling to the right.  Should be a simple adjustment to the center PWM value. But once those are done, time to start training! 
+
+### Feb 24
+
+Well, I was able to take Tanis for a drive today.  I spent a few hours cleaning up the code a bit and working on some small issues.  I was able to get the color corrected on the camera, and implemented an offset for the steering so it would stop pulling to the side.  The images are still a bit blurry, even after switching to a video stream running at 30 fps, and capturing each frame individually.  I am thinking it may be a bit better when I get the track made.  As it is, I am grabbing the images, and writing the corresponding steering angle to a csv file.  I will use this to capture the training data I will use to teach Angela how to drive.  I am going to work on building the track tomorrow and maybe capturing some video while driving around it.  My goal is somewhere around 40,000 images to use.  
+
+In school we were usually working with datasets containing around 30,000 images.  Capturing that many images would require I drove around the track for about 22 minutes (at 30 fps).  I dont plan on doing that though.  I plan on maybe one trip around the track in each direction. Once I get that set of images, then I will do some image manipulation to rotate some of the images, adjust the brightness, and some other cool tricks where the same image will be used 4-5 times and look different to the neural network each time.  If I have enough of a training set I will start working the neural network.  
+
+I adapted the Behaivorial Cloning neural network for use with Tanis, tomorrow I will see if it actually works :) Unti then, here is Tanis chasing my Boxer, Muzay.
+![Chasing Muzay](images/Chasing.jpg)

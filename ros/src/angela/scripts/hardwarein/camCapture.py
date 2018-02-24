@@ -15,7 +15,6 @@ import picamera.array
 import rospy
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
-import cv2
 from picamera.array import PiRGBArray
 
 
@@ -25,30 +24,41 @@ class Camera():
 
     def __init__(self, debug=False):
         self._DEBUG = debug
-        if self._DEBUG:
-            rospy.loginfo(self._DEBUG_INFO + " initializing node")
-
         rospy.init_node('Camera_Cap_Node')
+        rospy.loginfo(self._DEBUG_INFO + " initializing node")
+
+        
         self.image_pub = rospy.Publisher("/angela/cameras/main/capture", Image, queue_size=10)
         
-        self.rate = rospy.Rate(5)
+        self.rate = rospy.Rate(10)
         self.camera = picamera.PiCamera()
         while not rospy.is_shutdown():
-            self.CaptureStill()            
-            self.rate.sleep()
+            self.CaptureVideo()            
+            # self.rate.sleep()
+        self.camera.close()
 
     def CaptureStill(self):        
         
         rawCapture = PiRGBArray(self.camera)
         self.camera.start_preview()
-        # time.sleep(2)
         # https://answers.ros.org/question/199294/publish-image-msg/
-        self.camera.capture(rawCapture, format='rgb')
-        # self.camera.close()
+        self.camera.capture(rawCapture, format='bgr')
         image = rawCapture.array
-        # cv2image = cv2.imread(image)
-        msgImage = CvBridge().cv2_to_imgmsg(image, encoding="passthrough")
+        msgImage = CvBridge().cv2_to_imgmsg(image, encoding="rgb8")
         self.image_pub.publish(msgImage)
+
+    def CaptureVideo(self):
+        self.camera.resolution = (640, 480)
+        self.camera.framerate = 32
+        rawCapture = PiRGBArray(self.camera, size=(640, 480))
+        for frame in self.camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+            # grab the raw NumPy array representing the image, then initialize the timestamp
+            # and occupied/unoccupied text
+            image = frame.array
+            msgImage = CvBridge().cv2_to_imgmsg(image, encoding="rgb8")
+            self.image_pub.publish(msgImage)
+            # clear the stream in preparation for the next frame
+            rawCapture.truncate(0)
 
 
 if __name__ == '__main__':

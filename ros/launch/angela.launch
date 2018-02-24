@@ -5,7 +5,8 @@
     <node pkg="angela" name="Turn_Node" type="turnInput.py" output="screen"/>    
     <node pkg="angela" name="Speed_Node" type="speedInput.py" output="screen"/>
     <node pkg="angela" name="Camera_Cap_Node" type="camCapture.py" output="screen"/>
-    <node pkg="angela" name="Camera_Receive_Node" type="camIncoming.py" output="screen"/>
+    <!-- <node pkg="angela" name="Camera_Receive_Node" type="camIncoming.py" output="screen"/> -->
+    <node pkg="angela" name="Collate_Training_Data" type="CreateLogFile.py" output="screen"/>
     <!-- <node pkg="angela" name="testing_node" type="TanisTest.py"/> -->
 </launch>
 

@@ -15,6 +15,8 @@ from smbus import SMBus
 import rospy
 from angela.msg import steermsg
 from PWM_Control import PCA9685
+import numpy as np
+from collections import deque
 
 
 
@@ -24,19 +26,17 @@ class Steer(object):
     _DEBUG_INFO = 'DEBUG "steer.py":'
 
     def __init__(self, debug=False):  
-        self._DEBUG = debug
-        
-        if self._DEBUG:
-            rospy.loginfo("Launching steer script")       
+        self._DEBUG = debug 
+
+        rospy.init_node('Steering_Node')
+        rospy.loginfo(self._DEBUG_INFO + "initalizing node")       
         
         # Set our limits. there are about 30 degrees of movement on each side of center.
-        self._maxangle = {"left": 60, "straight": 90, "right": 120}
-        if self._DEBUG:
-            rospy.loginfo(self._DEBUG_INFO + 'left angle: %s, straight angle: %s, right angle: %s' % (self._maxangle["left"], self._maxangle["straight"], self._maxangle["right"]))
+        self._maxangle = {"left": 5, "straight": 6.8, "right": 8}        
 
-        # implement ROS subscribers
-        rospy.init_node('Steering_Node')
+       
         self.speed_sub = rospy.Subscriber('/angela/steer/setAngle', steermsg, self.turn)
+        self.steeringAverage = deque(maxlen=10)
         # stops the node from exiting
         rospy.spin()
    
@@ -58,13 +58,26 @@ class Steer(object):
         bus = SMBus(1)  
         pwm = PCA9685.PWM(bus, i2c_address)
         pwm.setFreq(fPWM)
-        duty = self.SetAngle(anglein)
-        pwm.setDuty(channel, duty)
+
+        # get the average of the last 10 inputs to the array
+        offset = -0.30
+        anglein = anglein + offset
+        self.steeringAverage.append(anglein)
+        avgAngle = sum(self.steeringAverage) / float(len(self.steeringAverage))
+        # np.insert(self.steeringAverage, 9, anglein)
+
+        if self._DEBUG:
+            rospy.loginfo(self.steeringAverage)        
+
+        if self._DEBUG:
+            rospy.loginfo("avg angle: " + str(avgAngle))
+
+        
+        pwm.setDuty(channel, anglein)
         if self._DEBUG:
             rospy.loginfo("script complete")
 
-    def SetAngle(self, angle):
-        return angle / 18 + 2
+    
 
 
 if __name__ == '__main__':

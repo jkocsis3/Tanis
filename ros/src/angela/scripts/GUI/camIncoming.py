@@ -23,9 +23,7 @@ class CamIncoming():
     
     def __init__(self, debug=False):
         self._DEBUG = debug
-        print(debug)
-        if self._DEBUG:
-            rospy.loginfo(self._DEBUG_INFO + "Initiating camIncoming Node")
+        rospy.loginfo(self._DEBUG_INFO + "Initiating Node")
         rospy.init_node("cam incoming node")
 
         self.bridge = CvBridge()
@@ -40,7 +38,7 @@ class CamIncoming():
         if self._DEBUG:
             rospy.loginfo(self._DEBUG_INFO + "Saving Image")
         try:
-            cv_image = self.bridge.imgmsg_to_cv2(data)
+            cv_image = self.bridge.imgmsg_to_cv2(data, desired_encoding="rgb8")
         except CvBridgeError as e:
             rospy.logerr(self._DEBUG_INFO)
             rospy.logerr(e)

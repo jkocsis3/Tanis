@@ -23,14 +23,20 @@ class TurnInput(object):
         self._DEBUG = debug
         # implement ROS subscribers
         rospy.init_node('Turn_Node')
+        rospy.loginfo(self._DEBUG_INFO + "initalizing node")
+
         self.pub_steer = rospy.Publisher('/angela/steer/setAngle', steermsg, queue_size=5)
         self.turningValue = 90  
-        self.rate = rospy.Rate(5)
+        self.rate = rospy.Rate(10)
         # time.sleep(10)
         self.controller = InputDevice('/dev/input/event0')
+        
         # while ROS is running
         while not rospy.is_shutdown():
+            # self.controller.grab()
             self.ReadInputs()
+            # self.controller.ungrab()
+
 
     def ReadInputs(self):
         for event in self.controller.read_loop():
@@ -38,13 +44,19 @@ class TurnInput(object):
                 if event.type == ecodes.EV_ABS:
                     absevent = categorize(event)            
                     if ecodes.bytype[absevent.event.type][absevent.event.code] == 'ABS_X':                    
-                        self.turningValue = 90 + int(absevent.event.value / 1050) 
+                        self.turningValue = (90 + (float(absevent.event.value) / 1050)) / 18 + 2
+                        # self.turningValue = self.SetPWM(self.turningValue)
                         if self._DEBUG:
-                            rospy.loginfo(self._DEBUG_INFO + " turning value = " + str(int(self.turningValue)))
+                            rospy.loginfo(self._DEBUG_INFO + " turning value = " + str(float(self.turningValue)))
                         self.pub_steer.publish(self.turningValue)
-                # self.rate.sleep()
+                        break            
             except IOError:
                 pass
+        rospy.loginfo("sleeping")
+        self.rate.sleep()
+
+    def SetPWM(self, angle):
+        return angle / 18 + 2
             
 if __name__ == '__main__':
     TurnInput()
